@@ -1,0 +1,10 @@
+tensorflow==2.8.0
+fastapi
+flask
+gunicorn
+uvicorn
+python-multipart
+pillow
+tensorflow-serving-api==2.5.0
+matplotlib
+numpy

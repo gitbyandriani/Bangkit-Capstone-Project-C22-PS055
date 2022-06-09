@@ -1,0 +1,9 @@
+
+tensorflow==2.9.0
+flask
+gunicorn
+python-multipart
+pillow
+tensorflow-serving-api==2.5.0
+matplotlib
+numpy

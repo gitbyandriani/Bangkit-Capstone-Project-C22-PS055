@@ -49,7 +49,7 @@ def predict(filename, model):
     return class_result, prob_result
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
     return render_template("index.html")
 

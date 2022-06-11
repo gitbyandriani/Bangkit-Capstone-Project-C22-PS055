@@ -1,15 +1,54 @@
-from flask import Flask, request, jsonify
+# app.py
+from flask import Flask, json, request, jsonify
+import os
+import urllib.request
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-@app.route("/im_size", methods=["POST"])
-def process_image():
-    file = request.files['image']
-    # Read the image via file.stream
-    img = Image.open(file.stream)
+app.secret_key = "caircocoders-ednalan"
 
-    return jsonify({'msg': 'success', 'size': [img.width, img.height]})
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
-if __name__ == "__main__":
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/')
+def main():
+    return 'Homepage'
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    # check if the post request has the file part
+    if 'file' not in request.files:
+        resp = jsonify({'message': 'No file part in the request'})
+        resp.status_code = 400
+        return resp
+
+    files = request.files.getlist('file')
+
+    file = request.files['file']
+    if file.filename == '':
+        resp = jsonify({'message': 'No file selected for uploading'})
+        resp.status_code = 400
+        return resp
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        resp = jsonify({'message': 'File successfully uploaded'})
+        resp.status_code = 201
+        return resp
+    else:
+        resp = jsonify({'message': 'Allowed file types are txt, pdf, png, jpg, jpeg, gif'})
+        resp.status_code = 400
+        return resp
+
+if __name__ == '__main__':
     app.run(debug=True)

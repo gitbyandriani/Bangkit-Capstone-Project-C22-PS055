@@ -4,7 +4,7 @@ import flask
 import urllib
 from PIL import Image
 from tensorflow.keras.models import load_model
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 app = Flask(__name__)
@@ -87,9 +87,9 @@ def success():
                 error = 'This image from this site is not accesible or inappropriate input'
 
             if (len(error) == 0):
-                return render_template('success.html', img=img, predictions=predictions)
+                return jsonify(predictions)
             else:
-                return render_template('index.html', error=error)
+                return jsonify(error)
 
 
         elif (request.files):
@@ -114,9 +114,9 @@ def success():
                 error = "Please upload images of jpg , jpeg and png extension only"
 
             if (len(error) == 0):
-                return render_template('success.html', img=img, predictions=predictions)
+                return jsonify(img, predictions)
             else:
-                return render_template('index.html', error=error)
+                return jsonify(error)
 
     else:
         return render_template('index.html')

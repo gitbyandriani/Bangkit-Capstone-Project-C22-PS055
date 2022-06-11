@@ -3,10 +3,9 @@ import uuid
 import flask
 import urllib
 from PIL import Image
-from tensorflow import keras
-from keras.models import load_model
-from keras.utils import load_img, img_to_array
-from flask import Flask, request
+from tensorflow.keras.models import load_model
+from flask import Flask, render_template, request, send_file, jsonify
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
